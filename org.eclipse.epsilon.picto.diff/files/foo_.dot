@@ -1,26 +1,29 @@
-graph "example3" {
+digraph "example3" {
+edge ["dir"="none"]
 subgraph "cluster_dot1" {
+edge ["dir"="forward"]
 graph ["label"="dot1"]
 "n5" ["shape"="box","label"="foo4"]
 "n1" ["shape"="box","label"="foo"]
 "n2" ["shape"="polygon","sides"="6","label"="bar"]
 "n4" ["shape"="box","label"="foo3"]
 "n3" ["shape"="box","label"="foo2"]
-"n1" -- "n2" ["label"="e1"]
-"n2" -- "n4" ["label"="e2"]
-"n2" -- "n3" ["label"="e3"]
-"n4" -- "n5" ["label"="e4"]
+"n1" -> "n2" ["label"="e1"]
+"n2" -> "n4" ["label"="e2"]
+"n2" -> "n3" ["label"="e3"]
+"n4" -> "n5" ["label"="e4"]
 }
 subgraph "cluster_dot2" {
+edge ["dir"="forward"]
 graph ["label"="dot2"]
-"n5 " ["shape"="box","label"="foo4"]
-"n3 " ["shape"="box","label"="foo2"]
-"n1 " ["shape"="box","label"="zoo"]
-"n2 " ["shape"="polygon","sides"="6","label"="bar"]
-"n4 " ["shape"="box","label"="foo3"]
-"n1 " -- "n2 " ["label"="e1"]
-"n2 " -- "n4 " ["label"="e2"]
-"n2 " -- "n3 " ["label"="e3"]
-"n4 " -- "n5 " ["label"="e4"]
+"_n5" ["shape"="box","label"="foo4"]
+"_n3" ["shape"="box","label"="foo2"]
+"_n1" ["shape"="box","label"="zoo"]
+"_n2" ["shape"="polygon","sides"="6","label"="bar"]
+"_n4" ["shape"="box","label"="foo3"]
+"_n1" -> "_n2" ["label"="e1"]
+"_n2" -> "_n4" ["label"="e2"]
+"_n2" -> "_n3" ["label"="e3"]
+"_n4" -> "_n5" ["label"="e4"]
 }
 }
