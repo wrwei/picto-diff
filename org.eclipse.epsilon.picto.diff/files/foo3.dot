@@ -1,0 +1,11 @@
+digraph G {
+	n1 [shape=box, label="zoo"];
+	n2 [shape=box, label="bar"];
+	n3 [shape=box, label="foo2"];
+	n4 [shape=box, label="foo3"];
+	n5 [shape=box, label="foo4"];
+	n1 -> n2 [label="e1"];
+	n2 -> n4 [label="e2"];
+	n2 -> n3 [label="e3"];
+	n4 -> n5 [label="e4"];
+}

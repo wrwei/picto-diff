@@ -1,4 +1,4 @@
-package org.eclipse.epsilon.picto.diff;
+package org.eclipse.epsilon.picto.diff.example;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,6 @@ public class Example1 {
 		try {
 			Graphviz.fromGraph(g).height(100).render(Format.PNG).toFile(new File("example/ex1.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

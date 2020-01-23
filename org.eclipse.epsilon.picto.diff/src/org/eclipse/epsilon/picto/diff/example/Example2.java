@@ -1,6 +1,7 @@
-package org.eclipse.epsilon.picto.diff;
+package org.eclipse.epsilon.picto.diff.example;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -15,7 +16,7 @@ public class Example2 {
 
 	public static void main(String[] args) throws IOException {
 		Example2 ex2 = new Example2();
-		try (InputStream dot = ex2.getClass().getResourceAsStream("color.dot")) {
+		InputStream dot = new FileInputStream("files/color.dot");
 		    MutableGraph g = new Parser().read(dot);
 		    Graphviz.fromGraph(g).width(700).render(Format.PNG).toFile(new File("example/ex2-1.png"));
 
@@ -27,7 +28,19 @@ public class Example2 {
 		                    Color.named(node.name().toString()),
 		                    Style.lineWidth(4).and(Style.FILLED)));
 		    Graphviz.fromGraph(g).width(700).render(Format.PNG).toFile(new File("example/ex2-2.png"));
-		}
-
+		
+//		try (InputStream dot = ex2.getClass().getClassLoader().getResourceAsStream("/files/color.dot")) {
+//		    MutableGraph g = new Parser().read(dot);
+//		    Graphviz.fromGraph(g).width(700).render(Format.PNG).toFile(new File("example/ex2-1.png"));
+//
+//		    g.graphAttrs()
+//		            .add(Color.WHITE.gradient(Color.rgb("888888")).background().angle(90))
+//		            .nodeAttrs().add(Color.WHITE.fill())
+//		            .nodes().forEach(node ->
+//		            node.add(
+//		                    Color.named(node.name().toString()),
+//		                    Style.lineWidth(4).and(Style.FILLED)));
+//		    Graphviz.fromGraph(g).width(700).render(Format.PNG).toFile(new File("example/ex2-2.png"));
+//		}
 	}
 }

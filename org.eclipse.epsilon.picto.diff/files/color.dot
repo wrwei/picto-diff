@@ -1,8 +1,8 @@
 graph {
-    { rank=same; white}
-    { rank=same; cyan; yellow; pink}
-    { rank=same; red; green; blue}
-    { rank=same; black}
+    { rank=same; white }
+    { rank=same; cyan; yellow; pink }
+    { rank=same; red; green; blue }
+    { rank=same; black }
 
     white -- cyan -- blue
     white -- yellow -- green
