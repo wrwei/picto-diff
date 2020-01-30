@@ -35,6 +35,9 @@ public class DotComparator {
 	
 	protected MutableGraph result;
 	
+	protected String serialise_png = null;
+	protected String serialise_dot = null;
+	
 	protected HashMap<MutableNode, HashSet<Link>> unchangedLinks = new HashMap<MutableNode, HashSet<Link>>();
 	protected HashMap<MutableNode, HashSet<Link>> addedLinks = new HashMap<MutableNode, HashSet<Link>>();
 	protected HashMap<MutableNode, HashSet<Link>> removedLinks = new HashMap<MutableNode, HashSet<Link>>();
@@ -438,10 +441,15 @@ public class DotComparator {
 		return null;
 	}
 	
+	public void setSerialiseOptions(String png_destination, String dot_destination) {
+		serialise_png = png_destination;
+		serialise_dot = dot_destination;
+	}
+	
 	public void serialise() throws IOException {
 		
-	    Graphviz.fromGraph(result).width(700).render(Format.PNG).toFile(new File("example/result.png"));
-	    Graphviz.fromGraph(result).render(Format.DOT).toFile(new File("files/result.dot"));
+	    Graphviz.fromGraph(result).width(700).render(Format.PNG).toFile(new File(serialise_png));
+	    Graphviz.fromGraph(result).render(Format.DOT).toFile(new File(serialise_dot));
 
 	}
 	
@@ -589,6 +597,7 @@ public class DotComparator {
 	public static void main(String[] args) throws IOException {
 	    DotComparator dotComparator = new DotComparator("files/foo.dot", "files/foo2.dot");
 	    dotComparator.initialise();
+	    dotComparator.setSerialiseOptions("example/result.png", "/files/result.dot");
 	    dotComparator.compare();
 	    dotComparator.serialise();
 	    
