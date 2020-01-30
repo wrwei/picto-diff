@@ -13,6 +13,7 @@ import java.util.List;
 import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.model.Link;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
 import guru.nidi.graphviz.parse.Parser;
@@ -36,9 +37,21 @@ public class Example3 {
 	    for(MutableNode n: g2.nodes()) {
 	    	n.setName(Label.of("_"+n.name().toString()));
 	    	g2ns.add(n);
+	    	for(Link l: n.links()) {
+	    		String label = (String) l.attrs().get("name");
+	    		if (label != null) {
+					label = "_"+label;
+				}
+	    		l.attrs().add("name", label);
+	    	}
 	    }
+	    
+	    for(Link l: g1.links()) {
+	    	System.out.println("This is run");
+	    	System.out.println(l);
+	    }
+	    
 	    g.add(graph("dot1").cluster().graphAttr().with("label", "dot1").directed().with(g1ns));
-//	    		with(node("foo").link(node("bar"))));
 	    g.add(graph("dot2").cluster().graphAttr().with("label", "dot2").directed().with(g2ns));
 
 	    Graphviz.fromGraph(g).width(700).render(Format.PNG).toFile(new File("example/foo.png"));
