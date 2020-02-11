@@ -1,0 +1,92 @@
+<svg width="700px" height="306px"
+ viewBox="0.00 0.00 599.00 261.63" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+ onload="startup(evt)">
+ 
+ <script><![CDATA[
+  var SVGDocument = null;
+  var SVGRoot = null;
+  var count=0;
+  CO=new Array("red","magenta","blue",
+    "grey","green","yellow","orange")
+ var svgns = 'http://www.w3.org/2000/svg';
+ var xlinkns = 'http://www.w3.org/1999/xlink';
+
+function startup(evt){
+  O=evt.target
+  SVGDoc = O.ownerDocument;
+  SVGRoot = SVGDoc.documentElement;
+  O.setAttribute("onmouseover","mouseOver(evt)");
+  O.setAttribute("onmouseout","mouseOut(evt)")
+  
+}
+function mouseOver(evt){
+	var element = evt.target;
+	var parent = element.parentNode;
+	count++;
+	if(parent.getAttribute("class")=="node") {
+		var children = parent.childNodes;
+		var title = '';
+		for(var i = 0; i < children.length; i++) {
+			if(children[i] instanceof SVGTitleElement) {
+				title = children[i].childNodes[0].nodeValue;
+			}
+			if(children[i] instanceof SVGPolygonElement) {
+				children[i].setAttribute("fill", CO[count%CO.length]);
+			}
+		}
+		var nodes = document.getElementsByClassName("node");
+		var index = -1;
+		for(var i = 0; i < nodes.length; i++) {
+			for(var j=0; j< nodes[i].childNodes.length; j++){
+				if(nodes[i].childNodes[j] instanceof SVGTitleElement) {
+					if(("_"+title) == nodes[i].childNodes[j].childNodes[0].nodeValue){
+						index = i;
+					}
+				}
+				if(nodes[i].childNodes[j] instanceof SVGPolygonElement) { 
+					if(index == i) {
+						nodes[i].childNodes[j].setAttribute("fill", CO[count%CO.length]);
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+function mouseOut(evt){
+	var element = evt.target;
+	var parent = element.parentNode;
+	if(parent.getAttribute("class")=="node") {
+		var children = parent.childNodes;
+		var title = '';
+		for(var i = 0; i < children.length; i++) {
+			if(children[i] instanceof SVGTitleElement) {
+				title = children[i].childNodes[0].nodeValue;
+			}
+			if(children[i] instanceof SVGPolygonElement) {
+				children[i].setAttribute("fill", "none");
+			}
+		}
+		var nodes = document.getElementsByClassName("node");
+		var index = -1;
+		for(var i = 0; i < nodes.length; i++) {
+			for(var j=0; j< nodes[i].childNodes.length; j++){
+				if(nodes[i].childNodes[j] instanceof SVGTitleElement) {
+					if(("_"+title) == nodes[i].childNodes[j].childNodes[0].nodeValue){
+						index = i;
+					}
+				}
+				if(nodes[i].childNodes[j] instanceof SVGPolygonElement) { 
+					if(index == i) {
+						nodes[i].childNodes[j].setAttribute("fill", "none");
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+  ]]>
+</script>

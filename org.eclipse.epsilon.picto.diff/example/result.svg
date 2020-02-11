@@ -1,0 +1,190 @@
+<svg width="700px" height="305px"
+ viewBox="0.00 0.00 599.00 261.29" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  onload="startup(evt)">
+  <script><![CDATA[
+  var SVGDocument = null;
+  var SVGRoot = null;
+  var count=0;
+  CO=new Array("red","magenta","blue",
+    "grey","green","yellow","orange")
+ var svgns = 'http://www.w3.org/2000/svg';
+ var xlinkns = 'http://www.w3.org/1999/xlink';
+
+function startup(evt){
+  O=evt.target
+  SVGDoc = O.ownerDocument;
+  SVGRoot = SVGDoc.documentElement;
+  O.setAttribute("onmouseover","mouseOver(evt)");
+  O.setAttribute("onmouseout","mouseOut(evt)")
+  
+}
+function mouseOver(evt){
+	var element = evt.target;
+	var parent = element.parentNode;
+	count++;
+	if(parent.getAttribute("class")=="node") {
+		var children = parent.childNodes;
+		var title = '';
+		for(var i = 0; i < children.length; i++) {
+			if(children[i] instanceof SVGTitleElement) {
+				title = children[i].childNodes[0].nodeValue;
+			}
+			if(children[i] instanceof SVGPolygonElement) {
+				children[i].setAttribute("fill", CO[count%CO.length]);
+			}
+		}
+		var nodes = document.getElementsByClassName("node");
+		var index = -1;
+		for(var i = 0; i < nodes.length; i++) {
+			for(var j=0; j< nodes[i].childNodes.length; j++){
+				if(nodes[i].childNodes[j] instanceof SVGTitleElement) {
+					if(("_"+title) == nodes[i].childNodes[j].childNodes[0].nodeValue){
+						index = i;
+					}
+				}
+				if(nodes[i].childNodes[j] instanceof SVGPolygonElement) { 
+					if(index == i) {
+						nodes[i].childNodes[j].setAttribute("fill", CO[count%CO.length]);
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+function mouseOut(evt){
+	var element = evt.target;
+	var parent = element.parentNode;
+	if(parent.getAttribute("class")=="node") {
+		var children = parent.childNodes;
+		var title = '';
+		for(var i = 0; i < children.length; i++) {
+			if(children[i] instanceof SVGTitleElement) {
+				title = children[i].childNodes[0].nodeValue;
+			}
+			if(children[i] instanceof SVGPolygonElement) {
+				children[i].setAttribute("fill", "none");
+			}
+		}
+		var nodes = document.getElementsByClassName("node");
+		var index = -1;
+		for(var i = 0; i < nodes.length; i++) {
+			for(var j=0; j< nodes[i].childNodes.length; j++){
+				if(nodes[i].childNodes[j] instanceof SVGTitleElement) {
+					if(("_"+title) == nodes[i].childNodes[j].childNodes[0].nodeValue){
+						index = i;
+					}
+				}
+				if(nodes[i].childNodes[j] instanceof SVGPolygonElement) { 
+					if(index == i) {
+						nodes[i].childNodes[j].setAttribute("fill", "none");
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+  ]]>
+</script>
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0) translate(4 257.293)">
+<title>%3</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-257.293 595,-257.293 595,4 -4,4"/>
+<g id="clust1" class="cluster"><title>cluster_left</title>
+<polygon fill="none" stroke="black" points="8,-8 8,-223 293,-223 293,-8 8,-8"/>
+<text text-anchor="middle" x="150.5" y="-207.8" font-family="Times New Roman,serif" font-size="14.00">digraph</text>
+</g>
+<g id="clust2" class="cluster"><title>cluster_right</title>
+<polygon fill="none" stroke="black" points="301,-8 301,-223 583,-223 583,-8 301,-8"/>
+<text text-anchor="middle" x="442" y="-207.8" font-family="Times New Roman,serif" font-size="14.00">digraph++</text>
+</g>
+<!-- Filesystem -->
+<g id="node1" class="node"><title>Filesystem</title>
+<polygon fill="none" stroke="black" points="195.5,-122.5 195.5,-191.5 284.5,-191.5 284.5,-122.5 195.5,-122.5"/>
+<text text-anchor="middle" x="240" y="-176.3" font-family="Times New Roman,serif" font-size="14.00">Filesystem</text>
+<polyline fill="none" stroke="black" points="195.5,-168.5 284.5,-168.5 "/>
+<text text-anchor="middle" x="240" y="-153.3" font-family="Times New Roman,serif" font-size="14.00">name : String</text>
+<polyline fill="none" stroke="black" points="195.5,-145.5 284.5,-145.5 "/>
+<text text-anchor="middle" x="240" y="-130.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
+</g>
+<!-- _Filesystem -->
+<g id="node5" class="node"><title>_Filesystem</title>
+<polygon fill="none" stroke="black" points="489,-122.5 489,-191.5 575,-191.5 575,-122.5 489,-122.5"/>
+<text text-anchor="middle" x="532" y="-176.3" font-family="Times New Roman,serif" font-size="14.00" fill="orange">Filesystem</text>
+<polyline fill="none" stroke="black" points="489,-168.5 575,-168.5 "/>
+<text text-anchor="middle" x="532" y="-153.3" font-family="Times New Roman,serif" font-size="14.00" fill="orange">label : String</text>
+<polyline fill="none" stroke="black" points="489,-145.5 575,-145.5 "/>
+<text text-anchor="middle" x="532" y="-130.3" font-family="Times New Roman,serif" font-size="14.00" fill="orange"> </text>
+</g>
+<!-- Filesystem&#45;&gt;_Filesystem -->
+<g id="edge3" class="edge"><title>Filesystem&#45;&gt;_Filesystem</title>
+<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M257.249,-191.649C268.407,-209.95 284.816,-230.704 306,-241 338.978,-257.028 438.332,-257.65 471,-241 488.207,-232.23 501.696,-216.085 511.566,-200.274"/>
+<polygon fill="orange" stroke="orange" points="514.63,-201.97 516.677,-191.575 508.594,-198.424 514.63,-201.97"/>
+</g>
+<!-- File -->
+<g id="node2" class="node"><title>File</title>
+<polygon fill="none" stroke="black" points="88.5,-122.5 88.5,-191.5 177.5,-191.5 177.5,-122.5 88.5,-122.5"/>
+<text text-anchor="middle" x="133" y="-176.3" font-family="Times New Roman,serif" font-size="14.00">File</text>
+<polyline fill="none" stroke="black" points="88.5,-168.5 177.5,-168.5 "/>
+<text text-anchor="middle" x="133" y="-153.3" font-family="Times New Roman,serif" font-size="14.00">name : String</text>
+<polyline fill="none" stroke="black" points="88.5,-145.5 177.5,-145.5 "/>
+<text text-anchor="middle" x="133" y="-130.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
+</g>
+<!-- PDFFile -->
+<g id="node3" class="node"><title>PDFFile</title>
+<polygon fill="none" stroke="black" points="101.5,-16.5 101.5,-85.5 164.5,-85.5 164.5,-16.5 101.5,-16.5"/>
+<text text-anchor="middle" x="133" y="-70.3" font-family="Times New Roman,serif" font-size="14.00">PDFFile</text>
+<polyline fill="none" stroke="black" points="101.5,-62.5 164.5,-62.5 "/>
+<text text-anchor="middle" x="133" y="-47.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
+<polyline fill="none" stroke="black" points="101.5,-39.5 164.5,-39.5 "/>
+<text text-anchor="middle" x="133" y="-24.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
+</g>
+<!-- File&#45;&gt;PDFFile -->
+<g id="edge1" class="edge"><title>File&#45;&gt;PDFFile</title>
+<path fill="none" stroke="black" d="M133,-112.052C133,-103.199 133,-94.0273 133,-85.5964"/>
+<polygon fill="none" stroke="black" points="129.5,-112.234 133,-122.234 136.5,-112.234 129.5,-112.234"/>
+</g>
+<!-- Admin -->
+<g id="node4" class="node"><title>Admin</title>
+<polygon fill="none" stroke="black" points="16,-122.5 16,-191.5 70,-191.5 70,-122.5 16,-122.5"/>
+<text text-anchor="middle" x="43" y="-176.3" font-family="Times New Roman,serif" font-size="14.00">Admin</text>
+<polyline fill="none" stroke="black" points="16,-168.5 70,-168.5 "/>
+<text text-anchor="middle" x="43" y="-153.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
+<polyline fill="none" stroke="black" points="16,-145.5 70,-145.5 "/>
+<text text-anchor="middle" x="43" y="-130.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
+</g>
+<!-- _File -->
+<g id="node6" class="node"><title>_File</title>
+<polygon fill="none" stroke="black" points="381.5,-122.5 381.5,-191.5 470.5,-191.5 470.5,-122.5 381.5,-122.5"/>
+<text text-anchor="middle" x="426" y="-176.3" font-family="Times New Roman,serif" font-size="14.00">File</text>
+<polyline fill="none" stroke="black" points="381.5,-168.5 470.5,-168.5 "/>
+<text text-anchor="middle" x="426" y="-153.3" font-family="Times New Roman,serif" font-size="14.00">name : String</text>
+<polyline fill="none" stroke="black" points="381.5,-145.5 470.5,-145.5 "/>
+<text text-anchor="middle" x="426" y="-130.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
+</g>
+<!-- _PDFFile -->
+<g id="node7" class="node"><title>_PDFFile</title>
+<polygon fill="none" stroke="red" stroke-dasharray="5,2" points="394.5,-16.5 394.5,-85.5 457.5,-85.5 457.5,-16.5 394.5,-16.5"/>
+<text text-anchor="middle" x="426" y="-70.3" font-family="Times New Roman,serif" font-size="14.00" fill="red">PDFFile</text>
+<polyline fill="none" stroke="red" stroke-dasharray="5,2" points="394.5,-62.5 457.5,-62.5 "/>
+<text text-anchor="middle" x="426" y="-47.3" font-family="Times New Roman,serif" font-size="14.00" fill="red"> </text>
+<polyline fill="none" stroke="red" stroke-dasharray="5,2" points="394.5,-39.5 457.5,-39.5 "/>
+<text text-anchor="middle" x="426" y="-24.3" font-family="Times New Roman,serif" font-size="14.00" fill="red"> </text>
+</g>
+<!-- _File&#45;&gt;_PDFFile -->
+<g id="edge2" class="edge"><title>_File&#45;&gt;_PDFFile</title>
+<path fill="none" stroke="red" stroke-dasharray="5,2" d="M426,-112.052C426,-103.199 426,-94.0273 426,-85.5964"/>
+<polygon fill="none" stroke="red" points="422.5,-112.234 426,-122.234 429.5,-112.234 422.5,-112.234"/>
+</g>
+<!-- _Admin -->
+<g id="node8" class="node"><title>_Admin</title>
+<polygon fill="none" stroke="red" stroke-dasharray="5,2" points="309,-122.5 309,-191.5 363,-191.5 363,-122.5 309,-122.5"/>
+<text text-anchor="middle" x="336" y="-176.3" font-family="Times New Roman,serif" font-size="14.00" fill="red">Admin</text>
+<polyline fill="none" stroke="red" stroke-dasharray="5,2" points="309,-168.5 363,-168.5 "/>
+<text text-anchor="middle" x="336" y="-153.3" font-family="Times New Roman,serif" font-size="14.00" fill="red"> </text>
+<polyline fill="none" stroke="red" stroke-dasharray="5,2" points="309,-145.5 363,-145.5 "/>
+<text text-anchor="middle" x="336" y="-130.3" font-family="Times New Roman,serif" font-size="14.00" fill="red"> </text>
+</g>
+</g>
+</svg>
