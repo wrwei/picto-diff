@@ -124,7 +124,7 @@ public class GVComparisonEngine {
 				addToTargetTemp(right_node_copy);
 				
 				//create a link between the two nodes
-				GraphUtil.linkCrossCluster(result, left_node_copy.name().toString(), right_node_copy.name().toString());
+//				GraphUtil.linkCrossCluster(result, left_node_copy.name().toString(), right_node_copy.name().toString());
 			}
 			
 			

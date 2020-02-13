@@ -2,11 +2,11 @@ var svg_tag = t_svg.all.first;
 svg_tag.s_onload = "startup(evt)";
 var script = new t_script;
 
-script.text = "<![CDATA[\n".println() +
+script.text = 
   	"var SVGDocument = null;\n"+
   	"var SVGRoot = null;\n"+
   	"var count=0;\n"+
-  	"CO=new Array(\"red\",\"magenta\",\"blue\",\"grey\",\"green\",\"yellow\",\"orange\");\n"+
+  	//"CO=new Array(\"red\",\"magenta\",\"blue\",\"grey\",\"green\",\"yellow\",\"orange\");\n"+
 	"var svgns = \'http://www.w3.org/2000/svg\';\n"+
  	"var xlinkns = \'http://www.w3.org/1999/xlink\';\n"+
 
@@ -29,7 +29,7 @@ script.text = "<![CDATA[\n".println() +
 					"title = children[i].childNodes[0].nodeValue;\n"+
 				"}\n"+
 				"if(children[i] instanceof SVGPolygonElement) {\n"+
-					"children[i].setAttribute(\"fill\", CO[count%CO.length]);\n"+
+					"children[i].setAttribute(\"fill\", \"grey\");\n"+
 				"}\n"+
 			"}\n"+
 			"var nodes = document.getElementsByClassName(\"node\");\n"+
@@ -43,7 +43,7 @@ script.text = "<![CDATA[\n".println() +
 					"}\n"+
 					"if(nodes[i].childNodes[j] instanceof SVGPolygonElement) {\n"+ 
 						"if(index == i) {\n"+
-							"nodes[i].childNodes[j].setAttribute(\"fill\", CO[count%CO.length]);\n"+
+							"nodes[i].childNodes[j].setAttribute(\"fill\", \"grey\");\n"+
 							"break;\n"+
 						"}\n"+
 					"}\n"+
@@ -83,7 +83,6 @@ script.text = "<![CDATA[\n".println() +
 				"}\n"+
 			"}\n"+
 		"}\n"+
-	"}\n"+
-"]]>\n".println();
+	"}\n";
 
 svg_tag.appendChild(script);
