@@ -2,14 +2,11 @@
  viewBox="0.00 0.00 599.00 261.63" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
  onload="startup(evt)">
  
- <script><![CDATA[
+<script><![CDATA[
   var SVGDocument = null;
   var SVGRoot = null;
-  var count=0;
-  CO=new Array("red","magenta","blue",
-    "grey","green","yellow","orange")
- var svgns = 'http://www.w3.org/2000/svg';
- var xlinkns = 'http://www.w3.org/1999/xlink';
+  var svgns = 'http://www.w3.org/2000/svg';
+  var xlinkns = 'http://www.w3.org/1999/xlink';
 
 function startup(evt){
   O=evt.target
@@ -22,7 +19,6 @@ function startup(evt){
 function mouseOver(evt){
 	var element = evt.target;
 	var parent = element.parentNode;
-	count++;
 	if(parent.getAttribute("class")=="node") {
 		var children = parent.childNodes;
 		var title = '';
@@ -31,7 +27,7 @@ function mouseOver(evt){
 				title = children[i].childNodes[0].nodeValue;
 			}
 			if(children[i] instanceof SVGPolygonElement) {
-				children[i].setAttribute("fill", CO[count%CO.length]);
+				children[i].setAttribute("fill", "grey");
 			}
 		}
 		var nodes = document.getElementsByClassName("node");
@@ -39,13 +35,20 @@ function mouseOver(evt){
 		for(var i = 0; i < nodes.length; i++) {
 			for(var j=0; j< nodes[i].childNodes.length; j++){
 				if(nodes[i].childNodes[j] instanceof SVGTitleElement) {
-					if(("_"+title) == nodes[i].childNodes[j].childNodes[0].nodeValue){
-						index = i;
+					if(title[0] == "_") {
+						if((title) == "_"+nodes[i].childNodes[j].childNodes[0].nodeValue){
+							index = i;
+						}
+					}
+					else {
+						if(("_"+title) == nodes[i].childNodes[j].childNodes[0].nodeValue){
+							index = i;
+						}
 					}
 				}
 				if(nodes[i].childNodes[j] instanceof SVGPolygonElement) { 
 					if(index == i) {
-						nodes[i].childNodes[j].setAttribute("fill", CO[count%CO.length]);
+						nodes[i].childNodes[j].setAttribute("fill", "grey");
 						break;
 					}
 				}
@@ -73,8 +76,15 @@ function mouseOut(evt){
 		for(var i = 0; i < nodes.length; i++) {
 			for(var j=0; j< nodes[i].childNodes.length; j++){
 				if(nodes[i].childNodes[j] instanceof SVGTitleElement) {
-					if(("_"+title) == nodes[i].childNodes[j].childNodes[0].nodeValue){
-						index = i;
+					if(title[0] == "_") {
+						if((title) == "_"+nodes[i].childNodes[j].childNodes[0].nodeValue){
+							index = i;
+						}
+					}
+					else {
+						if(("_"+title) == nodes[i].childNodes[j].childNodes[0].nodeValue){
+							index = i;
+						}
 					}
 				}
 				if(nodes[i].childNodes[j] instanceof SVGPolygonElement) { 

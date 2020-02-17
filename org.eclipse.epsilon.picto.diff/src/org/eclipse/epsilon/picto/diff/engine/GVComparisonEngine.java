@@ -55,6 +55,7 @@ public class GVComparisonEngine {
 		try {
 			if (context.loadGraphs()) {
 				result = mutGraph();
+				result.setName("pdiff");
 				source_temp = mutGraph();
 				source_temp.setDirected(true);
 				source_temp.setName("left");
