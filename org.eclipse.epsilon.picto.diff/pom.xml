@@ -2,7 +2,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.epsilon.picto.diff</groupId>
   <artifactId>org.eclipse.epsilon.picto.diff</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -21,11 +20,14 @@
   		<groupId>guru.nidi</groupId>
   		<artifactId>graphviz-java</artifactId>
   		<version>0.12.1</version>
+  		<type>ejb</type>
   	</dependency>
 	<dependency>
     	<groupId>ch.qos.logback</groupId>
     	<artifactId>logback-classic</artifactId>
     	<version>1.2.3</version>
+    	<type>ejb</type>
 	</dependency>
   </dependencies>
+  <version>0.1.0</version>
 </project>

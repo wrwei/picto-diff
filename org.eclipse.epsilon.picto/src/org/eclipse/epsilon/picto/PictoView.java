@@ -27,11 +27,14 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.epsilon.common.dt.console.EpsilonConsole;
 import org.eclipse.epsilon.common.dt.util.LogUtil;
+import org.eclipse.epsilon.common.module.ModuleElement;
 import org.eclipse.epsilon.common.util.OperatingSystem;
 import org.eclipse.epsilon.egl.EglFileGeneratingTemplateFactory;
 import org.eclipse.epsilon.egl.EglTemplateFactory;
 import org.eclipse.epsilon.egl.EglTemplateFactoryModuleAdapter;
 import org.eclipse.epsilon.egl.IEgxModule;
+import org.eclipse.epsilon.egl.parse.Egx_EolParserRules.elseStatement_return;
+import org.eclipse.epsilon.egl.parse.Egx_EolParserRules.newExpression_return;
 import org.eclipse.epsilon.emc.emf.InMemoryEmfModel;
 import org.eclipse.epsilon.eol.IEolModule;
 import org.eclipse.epsilon.eol.execute.context.IEolContext;
@@ -40,12 +43,16 @@ import org.eclipse.epsilon.flexmi.dt.PartListener;
 import org.eclipse.epsilon.flexmi.dt.RunnableWithException;
 import org.eclipse.epsilon.picto.LazyEgxModule.LazyGenerationRuleContentPromise;
 import org.eclipse.epsilon.picto.ViewRenderer.ZoomType;
+import org.eclipse.epsilon.picto.diff.engine.GVComparisonEngine_Cluster;
+import org.eclipse.epsilon.picto.diff.engine.GVContext;
+import org.eclipse.epsilon.picto.diff.engine.GVComparisonEngine_Cluster.DISPLAY_MODE;
 import org.eclipse.epsilon.picto.source.DotSource;
 import org.eclipse.epsilon.picto.source.EditingDomainProviderSource;
 import org.eclipse.epsilon.picto.source.EmfaticSource;
 import org.eclipse.epsilon.picto.source.FlexmiSource;
 import org.eclipse.epsilon.picto.source.HtmlSource;
 import org.eclipse.epsilon.picto.source.NeatoSource;
+import org.eclipse.epsilon.picto.source.PictoDiffSource;
 import org.eclipse.epsilon.picto.source.SvgSource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
@@ -71,6 +78,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.internal.keys.model.ModelElement;
 import org.eclipse.ui.part.ViewPart;
 
 public class PictoView extends ViewPart {
@@ -98,7 +106,8 @@ public class PictoView extends ViewPart {
 					new HtmlSource(),
 					new SvgSource(),
 					new DotSource(),
-					new NeatoSource());
+					new NeatoSource(),
+					new PictoDiffSource());
 	
 	@Override
 	public void createPartControl(Composite parent) {
@@ -275,14 +284,18 @@ public class PictoView extends ViewPart {
 
 		try {
 			
+			//get picto source
 			PictoSource source = getSource(editor);
 			
+			//if not found, sleep until found
 			while (source.getFile(editor) == null) { Thread.sleep(100); }
 			
+			//get model file
 			File modelFile = new File(source.getFile(editor).getLocation().toOSString());
 			boolean rerender = renderedFile != null && renderedFile.getAbsolutePath().equals(modelFile.getAbsolutePath());
 			renderedFile = modelFile;
 			
+			//prepare resource
 			Resource resource;
 			
 			try {
@@ -366,6 +379,52 @@ public class PictoView extends ViewPart {
 							setTreeViewerVisible(true);
 						}
 					});
+					
+				}
+				//handle pictodiff file
+				else if (source instanceof PictoDiffSource) {
+					String content = module.execute() + "";
+					String arr[] = content.split("\n");
+					
+					boolean valid = true;
+					if (arr.length != 3) {
+						valid = false;
+					}
+					String correct[] = {"left", "right", "transformation"};
+					String params[] = new String[3];
+					
+					for(int i = 0; i<3; i++) {
+						String param[] = arr[i].split("=");
+						if (param[0].trim().equals(correct[i])) {
+							params[i] = param[1].trim();
+						}
+						else {
+							valid = false;
+						}
+					}
+					
+					if (valid) {
+						GVContext gvContext = new GVContext(params[0], params[1]);
+					    GVComparisonEngine_Cluster comparisonEngine = new GVComparisonEngine_Cluster(gvContext, DISPLAY_MODE.CHANGED);
+					    comparisonEngine.load();
+					    comparisonEngine.compare();
+					    
+					    String c = comparisonEngine.getSVGString();
+						runInUIThread(new RunnableWithException() {
+							
+							@Override
+							public void runWithException() throws Exception {
+								if (!rerender) activeView = new ViewTree();
+								activeView.setPromise(new StringContentPromise(c));
+								activeView.setFormat(renderingMetadata.getFormat());
+								setTreeViewerVisible(false);
+								renderView(activeView);
+							}
+						});
+					}
+					else {
+						throw new Exception("pictodiff format is invalid");
+					}
 					
 				}
 				else {

@@ -2,5 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.epsilon.picto.diff
 Bundle-SymbolicName: org.eclipse.epsilon.picto.diff; singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.1.0
 Require-Bundle: org.eclipse.emf.ecore
+Export-Package: org.eclipse.epsilon.picto.diff.engine;uses:="guru.nidi.graphviz.model,org.eclipse.epsilon.picto.diff.util",
+ org.eclipse.epsilon.picto.diff.util;uses:="guru.nidi.graphviz.model"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

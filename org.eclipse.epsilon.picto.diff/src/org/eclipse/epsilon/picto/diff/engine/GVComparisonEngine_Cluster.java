@@ -628,6 +628,10 @@ public class GVComparisonEngine_Cluster {
 	    Graphviz.fromGraph(result).width(700).render(Format.SVG).toFile(new File(context.getSerialise_image()));
 	}
 	
+	public String getSVGString() {
+		 return Graphviz.fromGraph(result).width(700).render(Format.SVG).toString();
+	}
+	
 	private Link linkCrossCluster(MutableGraph graph, String from, String to) {
 		if(linkClusters) {
 			//the mechanism is funny, may need to report an issue.
