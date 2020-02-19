@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+<extension
+       point="org.eclipse.ui.views">
+    <view
+          category="org.eclipse.epsilon.dt"
+          class="org.eclipse.epsilon.picto.PictoView"
+          icon="icons/picto.png"
+          id="org.eclipse.epsilon.picto.PictoView"
+          inject="true"
+          name="Picto">
+    </view>
+</extension>
+    <extension
+        point="org.eclipse.ui.handlers">
+    <handler
+           class="org.eclipse.epsilon.picto.FindReplaceHandler"
+           commandId="org.eclipse.ui.edit.findReplace">
+        <activeWhen>
+           <with
+                 variable="activePartId">
+              <equals
+                    value="org.eclipse.epsilon.picto.PictoView">
+              </equals>
+           </with>
+        </activeWhen>
+     </handler>
+     </extension> 
+</plugin>

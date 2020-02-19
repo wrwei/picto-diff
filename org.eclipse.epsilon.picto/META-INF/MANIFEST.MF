@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.epsilon.picto
+Bundle-SymbolicName: org.eclipse.epsilon.picto;singleton:=true
+Archiver-Version: Plexus Archiver
+Built-By: default
+Require-Bundle: org.eclipse.epsilon.flexmi,org.eclipse.epsilon.flexmi.
+ dt,org.eclipse.jface,org.eclipse.ui.workbench,org.eclipse.core.resour
+ ces,org.eclipse.equinox.common,org.eclipse.core.jobs,org.eclipse.emf.
+ edit,org.eclipse.epsilon.common.dt,org.eclipse.epsilon.egl.engine,org
+ .eclipse.epsilon.emc.emf,org.eclipse.ui.ide,org.eclipse.emf.emfatic.u
+ i;resolution:=optional,org.eclipse.gymnast.runtime.ui;resolution:=opt
+ ional,org.eclipse.emf.emfatic.core;resolution:=optional,org.eclipse.g
+ ymnast.runtime.core;resolution:=optional,org.eclipse.ui.forms,org.ecl
+ ipse.emf.ecore.editor,org.eclipse.jface.text
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.epsilon.picto
+Bundle-Name: Picto
+Bundle-Version: 1.6.0.202001110208
+Bundle-Activator: org.eclipse.epsilon.picto.Activator
+Created-By: Apache Maven 3.5.4
+Build-Jdk: 1.8.0_202
+

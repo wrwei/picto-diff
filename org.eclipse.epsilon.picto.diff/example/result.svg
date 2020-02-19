@@ -106,7 +106,8 @@
 <text fill="red" font-family="Times New Roman,serif" font-size="14.00" text-anchor="middle" x="336" y="-130.3"> </text>
 </g>
 </g>
-<script>  var SVGDocument = null;
+<script>  var colour = "green";
+  var SVGDocument = null;
   var SVGRoot = null;
   var svgns = 'http://www.w3.org/2000/svg';
   var xlinkns = 'http://www.w3.org/1999/xlink';
@@ -128,7 +129,7 @@ function mouseOver(evt){
     title = children[i].childNodes[0].nodeValue;
    }
    if(children[i] instanceof SVGPolygonElement) {
-    children[i].setAttribute("fill", "grey");
+    children[i].setAttribute("fill", colour);
    }
   }
   var nodes = document.getElementsByClassName("node");
@@ -149,7 +150,7 @@ function mouseOver(evt){
     }
     if(nodes[i].childNodes[j] instanceof SVGPolygonElement) { 
      if(index == i) {
-      nodes[i].childNodes[j].setAttribute("fill", "grey");
+      nodes[i].childNodes[j].setAttribute("fill", colour);
       break;
      }
     }
