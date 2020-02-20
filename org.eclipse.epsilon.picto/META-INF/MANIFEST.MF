@@ -32,4 +32,5 @@ Bundle-Version: 1.6.0.202001110208
 Bundle-Activator: org.eclipse.epsilon.picto.Activator
 Created-By: Apache Maven 3.5.4
 Build-Jdk: 1.8.0_202
+Bundle-ClassPath: .
 
