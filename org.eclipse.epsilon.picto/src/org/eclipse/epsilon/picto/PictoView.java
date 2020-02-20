@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -70,6 +71,7 @@ import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.ISharedImages;
@@ -79,6 +81,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.internal.keys.model.ModelElement;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 
 public class PictoView extends ViewPart {
@@ -397,6 +400,7 @@ public class PictoView extends ViewPart {
 						String param[] = arr[i].split("=");
 						if (param[0].trim().equals(correct[i])) {
 							params[i] = param[1].trim();
+							params[i] = params[i].substring(0, params[i].indexOf(";"));
 						}
 						else {
 							valid = false;
@@ -404,7 +408,11 @@ public class PictoView extends ViewPart {
 					}
 					
 					if (valid) {
-						GVContext gvContext = new GVContext(params[0], params[1]);
+						IEditorInput input = editor.getEditorInput();
+						IPath path = ((FileEditorInput)input).getPath();
+						System.out.println(path.removeLastSegments(1));
+						System.out.println(path.removeLastSegments(1).append(params[0]).toOSString());
+						GVContext gvContext = new GVContext(path.removeLastSegments(1).append(params[0]).toOSString(), path.removeLastSegments(1).append(params[1]).toOSString());
 					    GVComparisonEngine_Cluster comparisonEngine = new GVComparisonEngine_Cluster(gvContext, DISPLAY_MODE.CHANGED);
 					    comparisonEngine.load();
 					    comparisonEngine.compare();
