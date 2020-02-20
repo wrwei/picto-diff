@@ -32,7 +32,6 @@ public class GVComparisonEngine_Cluster {
 
 	protected GraphValidator graphValidator = new GraphValidator();
 	
-
 	protected HashSet<MutableNode> changedNodes = new HashSet<MutableNode>();
 	protected HashSet<MutableNode> unchangedNodes = new HashSet<MutableNode>();
 	protected HashSet<MutableNode> added3dNodes = new HashSet<MutableNode>();
@@ -48,6 +47,15 @@ public class GVComparisonEngine_Cluster {
 	protected HashMap<MutableNode, HashSet<String>> changedAttrs = new HashMap<MutableNode, HashSet<String>>();
 	protected HashMap<MutableNode, HashSet<String>> unchangedAttrs = new HashMap<MutableNode, HashSet<String>>();
 	
+	public static void main(String[] args) throws IOException {
+		GVContext context = new GVContext("files/simple_filesystem.dot", "files/simple_filesystem2.dot");
+	    GVComparisonEngine_Cluster comparisonEngine = new GVComparisonEngine_Cluster(context, DISPLAY_MODE.CHANGED);
+	    comparisonEngine.load();
+	    context.setSerialiseOptions("example/result_1.svg", "files/result_1.dot");
+	    comparisonEngine.compare();
+	    comparisonEngine.serialise();
+	}
+
 	public GVComparisonEngine_Cluster(GVContext context, DISPLAY_MODE mode) {
 		this.context = context;
 	}
@@ -665,13 +673,4 @@ public class GVComparisonEngine_Cluster {
 		
 	}
 	
-	public static void main(String[] args) throws IOException {
-		GVContext context = new GVContext("files/simple_filesystem.dot", "files/simple_filesystem2.dot");
-	    GVComparisonEngine_Cluster comparisonEngine = new GVComparisonEngine_Cluster(context, DISPLAY_MODE.CHANGED);
-	    comparisonEngine.load();
-	    context.setSerialiseOptions("example/result_1.svg", "files/result_1.dot");
-	    comparisonEngine.compare();
-	    comparisonEngine.serialise();
-	}
-
 }
