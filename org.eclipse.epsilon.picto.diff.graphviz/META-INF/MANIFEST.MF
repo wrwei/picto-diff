@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.epsilon.picto.diff.graphviz
-Bundle-SymbolicName: org.eclipse.epsilon.picto.diff.graphviz;singleton:=true
+Bundle-SymbolicName: org.eclipse.epsilon.picto.diff.dependencies;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Require-Bundle: org.eclipse.emf.ecore
 Bundle-ClassPath: target/apiguardian-api-1.0.0.jar,

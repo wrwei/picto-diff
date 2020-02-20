@@ -25,7 +25,7 @@ public class GVContext {
 	}
 	
 	public boolean loadGraphs() throws IOException {
-		ss = new FileInputStream(sourceFile);
+ 		ss = new FileInputStream(sourceFile);
 		sourceGraph = new Parser().read(ss);
 		ts = new FileInputStream(targetFile);
 		targetGraph = new Parser().read(ts);
