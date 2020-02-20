@@ -120,6 +120,20 @@ public class GraphUtil {
 		graph.rootNodes().add(node);
 	}
 	
+	public static void paintRed(MutableGraph graph) {
+		graph.graphAttrs().add("color", "red");
+		graph.graphAttrs().add("style", "dashed");
+		graph.graphAttrs().add("fontcolor", "red");
+	}
+	
+	public static void paintOrange(MutableGraph graph) {
+		graph.graphAttrs().add("color", "orange");
+	}
+	
+	public static void paintGreen(MutableGraph graph) {
+		graph.graphAttrs().add("color", "green");
+	}
+	
 	public static void paintRed(MutableNode node) {
 		node.attrs().add("color", "red");
 		node.attrs().add("style", "dashed");

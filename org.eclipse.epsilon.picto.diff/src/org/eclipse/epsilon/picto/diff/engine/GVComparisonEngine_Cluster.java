@@ -22,7 +22,7 @@ import static guru.nidi.graphviz.model.Factory.*;
 public class GVComparisonEngine_Cluster {
 	
 	public enum DISPLAY_MODE {ALL, CHANGED};
-
+	private enum ADD_MODE {ADDED, CHANGED, REMOVED, NORMAL};
 	protected GVContext context = null;
 	protected boolean linkClusters = true;
 	
@@ -125,7 +125,7 @@ public class GVComparisonEngine_Cluster {
 				addNodeToSourceTemp(left_node);
 				
 				//right node copy
-				addNodeToTargetTemp(right_node);
+				addNodeToTargetTemp(right_node, ADD_MODE.CHANGED);
 			}
 			
 			
@@ -180,12 +180,12 @@ public class GVComparisonEngine_Cluster {
 			{
 				//find target and addit to the right temp graph
 				MutableNode link_target = findLinkTarget(context.getTargetGraph(), changed_link);
-				MutableNode temp = addNodeToTargetTemp(link_target);
+				MutableNode temp = addNodeToTargetTemp(link_target, ADD_MODE.NORMAL);
 
 				//add the source to the right temp graph too
 				MutableNode link_source = findNodeInTargetTemp(IDUtil.getPrefix() + right_node.name().toString());
 				if (link_source == null) {
-					link_source = addNodeToTargetTemp(left_node);
+					link_source = addNodeToTargetTemp(left_node, ADD_MODE.NORMAL);
 				}
 				
 				Link right_link = linkCrossCluster(target_temp, link_source.name().toString(), temp.name().toString());
@@ -219,11 +219,11 @@ public class GVComparisonEngine_Cluster {
 				 * deal with the right node
 				 */
 				
-				MutableNode right_node_copy = addNodeToTargetTemp(right_node);
+				MutableNode right_node_copy = addNodeToTargetTemp(right_node, ADD_MODE.NORMAL);
 				
 				MutableNode right_link_target = findLinkTarget(context.getTargetGraph(), removed_link);
 				if (right_link_target != null) {
-					MutableNode right_temp = addNodeToTargetTemp(right_link_target);
+					MutableNode right_temp = addNodeToTargetTemp(right_link_target, ADD_MODE.NORMAL);
 					MutableNode r_link_source = findNodeInTargetTemp(right_node_copy.name().toString());
 					
 					Link right_link = linkCrossCluster(target_temp, r_link_source.name().toString(), right_temp.name().toString());
@@ -234,7 +234,7 @@ public class GVComparisonEngine_Cluster {
 				}
 				else {
 					right_link_target = findLinkTarget(context.getSourceGraph(), removed_link);
-					MutableNode right_temp = addNodeToTargetTemp(right_link_target);
+					MutableNode right_temp = addNodeToTargetTemp(right_link_target, ADD_MODE.NORMAL);
 
 					MutableNode r_link_source = findNodeInTargetTemp(right_node_copy.name().toString());
 					
@@ -256,10 +256,10 @@ public class GVComparisonEngine_Cluster {
 			//for each link in the right node copy - they are added ones
 			for(Link right_link: right_node_copy.links()) {
 				MutableNode link_target = findLinkTarget(context.getTargetGraph(), right_link);
-				MutableNode temp = addNodeToTargetTemp(link_target);
+				MutableNode temp = addNodeToTargetTemp(link_target, ADD_MODE.NORMAL);
 				MutableNode link_source = findNodeInTargetTemp(IDUtil.getPrefix() + right_node.name().toString());
 				if (link_source == null) {
-					link_source = addNodeToTargetTemp(right_node);
+					link_source = addNodeToTargetTemp(right_node, ADD_MODE.NORMAL);
 				}
 				
 				Link link = linkCrossCluster(target_temp, link_source.name().toString(), temp.name().toString());
@@ -276,7 +276,7 @@ public class GVComparisonEngine_Cluster {
 			addRemovedNode(left_node);
 			addNodeToSourceTemp(left_node);
 			
-			addRemovedNodeToTargetTemp(left_node);
+			addNodeToTargetTemp(left_node, ADD_MODE.REMOVED);
 			getSourceNodes().remove(left_node);
 
 		}
@@ -320,24 +320,22 @@ public class GVComparisonEngine_Cluster {
 		return copy;
 	}
 	
-	public MutableNode addNodeToTargetTemp(MutableNode node) {
+	public MutableNode addNodeToTargetTemp(MutableNode node, ADD_MODE mode) {
 		MutableNode copy = getNodeCopy(node);
 		IDUtil.prefixNode(copy);
 		MutableGraph g = mutGraph();
-		g.graphAttrs().add("label", "");
-
-		g.setCluster(true);
-		g.rootNodes().add(copy);
-		g.setName(copy.name().toString());
-		target_temp.graphs().add(g);
-		return copy;
-	}
-	
-	public MutableNode addRemovedNodeToTargetTemp(MutableNode node) {
-		MutableNode copy = getNodeCopy(node);
-		IDUtil.prefixNode(copy);
-		GraphUtil.paintRed(copy);
-		MutableGraph g = mutGraph();
+		if (mode == ADD_MODE.ADDED) {
+			GraphUtil.paintGreen(g);
+		}
+		else if (mode == ADD_MODE.CHANGED) {
+			GraphUtil.paintOrange(g);
+		}
+		else if (mode == ADD_MODE.REMOVED) {
+			GraphUtil.paintRed(g);
+		}
+		else {
+			
+		}
 		g.graphAttrs().add("label", "");
 		g.setCluster(true);
 		g.rootNodes().add(copy);
@@ -345,7 +343,6 @@ public class GVComparisonEngine_Cluster {
 		target_temp.graphs().add(g);
 		return copy;
 	}
-
 	
 	private HashSet<MutableNode> getUnmutableSourceNodes() {
 		return (HashSet<MutableNode>) context.getSourceGraph().nodes();
