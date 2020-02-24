@@ -33,6 +33,7 @@ import org.eclipse.epsilon.egl.EglFileGeneratingTemplateFactory;
 import org.eclipse.epsilon.egl.EglTemplateFactory;
 import org.eclipse.epsilon.egl.EglTemplateFactoryModuleAdapter;
 import org.eclipse.epsilon.egl.IEgxModule;
+import org.eclipse.epsilon.egl.parse.Egx_EolParserRules.newExpression_return;
 import org.eclipse.epsilon.emc.emf.InMemoryEmfModel;
 import org.eclipse.epsilon.eol.IEolModule;
 import org.eclipse.epsilon.eol.execute.context.IEolContext;
@@ -408,6 +409,48 @@ public class PictoView extends ViewPart {
 					    comparisonEngine.compare();
 					    
 					    String c = comparisonEngine.getSVGString();
+					    
+						ViewTree viewTree = new ViewTree();
+						
+						ArrayList<String> p = new ArrayList<String>();
+						p.add("Model");
+						p.add("(Diff)");
+						viewTree.addPath(p, new StringContentPromise(c), "html", "diagram-ff0000");
+
+						p.remove(1);
+						p.add("(All classes Left)");
+						
+						StringContentPromise promise = new StringContentPromise(gvContext.getSourceGraphPromise());
+						viewTree.addPath(p, promise, "html", "diagram-ff0000");
+						
+						p.remove(1);
+						p.add("(All classes Right)");
+						
+						promise = new StringContentPromise(gvContext.getTargetGraphPromise());
+						viewTree.addPath(p, promise, "html", "diagram-ff0000");
+						
+						p.remove(1);
+						p.add("Left Classes");
+						
+						HashMap<String, String> source_map = gvContext.getSourcePromiseMap();
+						for(String key: source_map.keySet()) {
+							p.add(key);
+							viewTree.addPath(p, new StringContentPromise(source_map.get(key)), "graphviz-dot", "diagram-00ff00");
+							p.remove(p.size()-1);
+						}
+						
+						p.remove(p.size()-1);
+						p.add("Right Classes");
+						
+						HashMap<String, String> target_map = gvContext.getTargetPromiseMap();
+						for(String key: target_map.keySet()) {
+							p.add(key);
+							viewTree.addPath(p, new StringContentPromise(source_map.get(key)), "graphviz-dot", "diagram-00ff00");
+							p.remove(p.size()-1);
+						}
+						
+						
+					    
 						runInUIThread(new RunnableWithException() {
 							
 							@Override
@@ -415,7 +458,8 @@ public class PictoView extends ViewPart {
 								if (!rerender) activeView = new ViewTree();
 								activeView.setPromise(new StringContentPromise(c));
 								activeView.setFormat(renderingMetadata.getFormat());
-								setTreeViewerVisible(false);
+								setViewTree(viewTree, rerender);
+								setTreeViewerVisible(true);
 								renderView(activeView);
 							}
 						});

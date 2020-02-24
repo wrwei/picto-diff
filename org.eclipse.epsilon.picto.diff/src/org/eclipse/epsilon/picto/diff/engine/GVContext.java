@@ -3,6 +3,9 @@ package org.eclipse.epsilon.picto.diff.engine;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+
+import org.eclipse.epsilon.picto.diff.util.GraphPromiseGenerator;
 
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.parse.Parser;
@@ -15,6 +18,8 @@ public class GVContext {
 	protected String targetFile;
 	protected MutableGraph sourceGraph;
 	protected MutableGraph targetGraph;
+	protected GraphPromiseGenerator source_pg;
+	protected GraphPromiseGenerator target_pg;
 	
 	protected String serialise_image = null;
 	protected String serialise_dot = null;
@@ -30,6 +35,9 @@ public class GVContext {
 		ts = new FileInputStream(targetFile);
 		targetGraph = new Parser().read(ts);
 
+		source_pg = new GraphPromiseGenerator(sourceGraph.copy());
+		target_pg = new GraphPromiseGenerator(targetGraph.copy());
+		
 		ss.close();
 		ts.close();
 		return true;
@@ -60,4 +68,21 @@ public class GVContext {
 	public String getSerialise_dot() {
 		return serialise_dot;
 	}
+	
+	public String getSourceGraphPromise() {
+		return source_pg.getGraphPromise();
+	}
+	
+	public HashMap<String, String> getSourcePromiseMap() {
+		return source_pg.getPromiseMap();
+	}
+	
+	public String getTargetGraphPromise() {
+		return target_pg.getGraphPromise();
+	}
+	
+	public HashMap<String, String> getTargetPromiseMap() {
+		return target_pg.getPromiseMap();
+	}
+	
 }
