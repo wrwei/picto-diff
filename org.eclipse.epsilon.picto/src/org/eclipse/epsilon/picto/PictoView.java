@@ -414,23 +414,23 @@ public class PictoView extends ViewPart {
 						
 						ArrayList<String> p = new ArrayList<String>();
 						p.add("Model");
-						p.add("(Diff)");
+						p.add("(Diff Graph)");
 						viewTree.addPath(p, new StringContentPromise(c), "html", "diagram-ff0000");
 
 						p.remove(1);
-						p.add("(All classes Left)");
+						p.add("(Left Graph)");
 						
 						StringContentPromise promise = new StringContentPromise(gvContext.getSourceGraphPromise());
 						viewTree.addPath(p, promise, "html", "diagram-ff0000");
 						
 						p.remove(1);
-						p.add("(All classes Right)");
+						p.add("(Right Graph)");
 						
 						promise = new StringContentPromise(gvContext.getTargetGraphPromise());
 						viewTree.addPath(p, promise, "html", "diagram-ff0000");
 						
 						p.remove(1);
-						p.add("Left Classes");
+						p.add("Left Nodes");
 						
 						HashMap<String, String> source_map = gvContext.getSourcePromiseMap();
 						for(String key: source_map.keySet()) {
@@ -440,7 +440,7 @@ public class PictoView extends ViewPart {
 						}
 						
 						p.remove(p.size()-1);
-						p.add("Right Classes");
+						p.add("Right Nodes");
 						
 						HashMap<String, String> target_map = gvContext.getTargetPromiseMap();
 						for(String key: target_map.keySet()) {
