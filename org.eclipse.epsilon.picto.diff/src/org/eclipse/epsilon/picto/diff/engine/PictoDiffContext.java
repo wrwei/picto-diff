@@ -10,7 +10,7 @@ import org.eclipse.epsilon.picto.diff.util.GraphPromiseGenerator;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.parse.Parser;
 
-public class GVContext {
+public class PictoDiffContext {
 
 	protected InputStream ss;
 	protected InputStream ts;
@@ -24,7 +24,7 @@ public class GVContext {
 	protected String serialise_image = null;
 	protected String serialise_dot = null;
 	
-	public GVContext(String sourceFile, String targetFile) {
+	public PictoDiffContext(String sourceFile, String targetFile) {
 		this.sourceFile = sourceFile;
 		this.targetFile = targetFile;
 	}

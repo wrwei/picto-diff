@@ -2,13 +2,14 @@ package org.eclipse.epsilon.picto.diff.engine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
-import org.eclipse.epsilon.picto.diff.util.GraphUtil;
-import org.eclipse.epsilon.picto.diff.util.GraphValidator;
-import org.eclipse.epsilon.picto.diff.util.IDUtil;
+import org.eclipse.epsilon.picto.diff.util.PictoDiffUtil;
+import org.eclipse.epsilon.picto.diff.util.PictoDiffValidator;
+import org.eclipse.epsilon.picto.diff.util.PictoDiffIDUtil;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -19,18 +20,19 @@ import guru.nidi.graphviz.model.PortNode;
 
 import static guru.nidi.graphviz.model.Factory.*;
 
-public class GVComparisonEngine_Cluster {
+public class PictoDiffEngine {
 	
+	private ArrayList<String> feedbacks = new ArrayList<String>();
 	public enum DISPLAY_MODE {ALL, CHANGED};
 	private enum ADD_MODE {ADDED, CHANGED, REMOVED, NORMAL};
-	protected GVContext context = null;
+	protected PictoDiffContext context = null;
 	protected boolean linkClusters = true;
 	
 	protected MutableGraph source_temp;
 	protected MutableGraph target_temp;
 	protected MutableGraph result;
 
-	protected GraphValidator graphValidator = new GraphValidator();
+	protected PictoDiffValidator graphValidator = new PictoDiffValidator();
 	
 	protected HashSet<MutableNode> changedNodes = new HashSet<MutableNode>();
 	protected HashSet<MutableNode> unchangedNodes = new HashSet<MutableNode>();
@@ -48,15 +50,15 @@ public class GVComparisonEngine_Cluster {
 	protected HashMap<MutableNode, HashSet<String>> unchangedAttrs = new HashMap<MutableNode, HashSet<String>>();
 	
 	public static void main(String[] args) throws IOException {
-		GVContext context = new GVContext("files/simple_filesystem.dot", "files/simple_filesystem2.dot");
-	    GVComparisonEngine_Cluster comparisonEngine = new GVComparisonEngine_Cluster(context, DISPLAY_MODE.CHANGED);
+		PictoDiffContext context = new PictoDiffContext("files/simple_filesystem.dot", "files/simple_filesystem2.dot");
+	    PictoDiffEngine comparisonEngine = new PictoDiffEngine(context, DISPLAY_MODE.CHANGED);
 	    comparisonEngine.load();
 	    context.setSerialiseOptions("example/result_1.svg", "files/result_1.dot");
 	    comparisonEngine.compare();
 	    comparisonEngine.serialise();
 	}
 
-	public GVComparisonEngine_Cluster(GVContext context, DISPLAY_MODE mode) {
+	public PictoDiffEngine(PictoDiffContext context, DISPLAY_MODE mode) {
 		this.context = context;
 	}
 	
@@ -80,6 +82,7 @@ public class GVComparisonEngine_Cluster {
 				target_temp.addTo(result);
 			}
 		} catch (IOException e) {
+			addFeedback(e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
@@ -91,7 +94,7 @@ public class GVComparisonEngine_Cluster {
 			compareNode(n);
 		}
 		if (getUnmutableSourceNodes().size() != 0) {
-			System.err.println("something is wrong");
+			addFeedback("unmutable source nodes > 0, something is wrong");
 		}
 	}
 	
@@ -112,10 +115,10 @@ public class GVComparisonEngine_Cluster {
 				//paint orange for changed attributes
 				for(String s: getChangedAttrs(right_node)) {
 					if (s.equals("label")) {
-						GraphUtil.paintLabelOrange(right_node);
+						PictoDiffUtil.paintLabelOrange(right_node);
 					}
 					else {
-						GraphUtil.paintOrange(right_node);
+						PictoDiffUtil.paintOrange(right_node);
 					}
 				}
 				/*
@@ -183,14 +186,14 @@ public class GVComparisonEngine_Cluster {
 				MutableNode temp = addNodeToTargetTemp(link_target, ADD_MODE.NORMAL);
 
 				//add the source to the right temp graph too
-				MutableNode link_source = findNodeInTargetTemp(IDUtil.getPrefix() + right_node.name().toString());
+				MutableNode link_source = findNodeInTargetTemp(PictoDiffIDUtil.getPrefix() + right_node.name().toString());
 				if (link_source == null) {
 					link_source = addNodeToTargetTemp(left_node, ADD_MODE.NORMAL);
 				}
 				
 				Link right_link = linkCrossCluster(target_temp, link_source.name().toString(), temp.name().toString());
 				right_link.attrs().add(changed_link.copy());
-				GraphUtil.paintOrange(right_link);
+				PictoDiffUtil.paintOrange(right_link);
 				
 //				Link link = link_source.linkTo(temp);
 //				link.attrs().add(changed_link.copy());
@@ -228,7 +231,7 @@ public class GVComparisonEngine_Cluster {
 					
 					Link right_link = linkCrossCluster(target_temp, r_link_source.name().toString(), right_temp.name().toString());
 					right_link.attrs().add(removed_link.copy());
-					GraphUtil.paintRed(right_link);
+					PictoDiffUtil.paintRed(right_link);
 
 
 				}
@@ -240,7 +243,7 @@ public class GVComparisonEngine_Cluster {
 					
 					Link right_link = linkCrossCluster(target_temp, r_link_source.name().toString(), right_temp.name().toString());
 					right_link.attrs().add(removed_link.copy());
-					GraphUtil.paintRed(right_link);
+					PictoDiffUtil.paintRed(right_link);
 				}
 			}
 			
@@ -257,14 +260,14 @@ public class GVComparisonEngine_Cluster {
 			for(Link right_link: right_node_copy.links()) {
 				MutableNode link_target = findLinkTarget(context.getTargetGraph(), right_link);
 				MutableNode temp = addNodeToTargetTemp(link_target, ADD_MODE.NORMAL);
-				MutableNode link_source = findNodeInTargetTemp(IDUtil.getPrefix() + right_node.name().toString());
+				MutableNode link_source = findNodeInTargetTemp(PictoDiffIDUtil.getPrefix() + right_node.name().toString());
 				if (link_source == null) {
 					link_source = addNodeToTargetTemp(right_node, ADD_MODE.NORMAL);
 				}
 				
 				Link link = linkCrossCluster(target_temp, link_source.name().toString(), temp.name().toString());
 				right_link.attrs().add(link.copy());
-				GraphUtil.paintRed(link);
+				PictoDiffUtil.paintRed(link);
 			}		
 			
 			//remove left node and right node from their graphs (to reduce memory footprint)
@@ -322,16 +325,16 @@ public class GVComparisonEngine_Cluster {
 	
 	public MutableNode addNodeToTargetTemp(MutableNode node, ADD_MODE mode) {
 		MutableNode copy = getNodeCopy(node);
-		IDUtil.prefixNode(copy);
+		PictoDiffIDUtil.prefixNode(copy);
 		MutableGraph g = mutGraph();
 		if (mode == ADD_MODE.ADDED) {
-			GraphUtil.paintGreen(g);
+			PictoDiffUtil.paintGreen(g);
 		}
 		else if (mode == ADD_MODE.CHANGED) {
-			GraphUtil.paintOrange(g);
+			PictoDiffUtil.paintOrange(g);
 		}
 		else if (mode == ADD_MODE.REMOVED) {
-			GraphUtil.paintRed(g);
+			PictoDiffUtil.paintRed(g);
 		}
 		else {
 			
@@ -667,7 +670,22 @@ public class GVComparisonEngine_Cluster {
 			graph.rootNodes().add(node);
 			return link;
 		}
-		
+	}
+	
+	public void addFeedback(String feedback) {
+		feedbacks.add(feedback);
+	}
+	
+	public ArrayList<String> getFeedbacks() {
+		return feedbacks;
+	}
+	
+	public String getStringFeedback() {
+		String ret = "";
+		for(String s: feedbacks) {
+			ret = ret + s + "\n";
+		}
+		return ret;
 	}
 	
 }

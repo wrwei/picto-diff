@@ -12,7 +12,7 @@ import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
 import guru.nidi.graphviz.parse.Parser;
 
-public class IDUtil {
+public class PictoDiffIDUtil {
 
 	
 	private static String PREFIX = "_";
@@ -58,7 +58,7 @@ public class IDUtil {
 		InputStream dot1 = new FileInputStream("files/foo.dot");
 	    MutableGraph g = new Parser().read(dot1);
 	    
-	    IDUtil.prefixGraph(g);
+	    PictoDiffIDUtil.prefixGraph(g);
 	    
 	    Graphviz.fromGraph(g).width(700).render(Format.PNG).toFile(new File("example/foo_prefixed.png"));
 	    Graphviz.fromGraph(g).render(Format.DOT).toFile(new File("files/foo_prefixed.dot"));

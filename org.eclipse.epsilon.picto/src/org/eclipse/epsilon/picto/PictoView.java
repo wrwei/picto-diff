@@ -33,16 +33,15 @@ import org.eclipse.epsilon.egl.EglFileGeneratingTemplateFactory;
 import org.eclipse.epsilon.egl.EglTemplateFactory;
 import org.eclipse.epsilon.egl.EglTemplateFactoryModuleAdapter;
 import org.eclipse.epsilon.egl.IEgxModule;
-import org.eclipse.epsilon.egl.parse.Egx_EolParserRules.newExpression_return;
 import org.eclipse.epsilon.emc.emf.InMemoryEmfModel;
 import org.eclipse.epsilon.eol.IEolModule;
 import org.eclipse.epsilon.eol.execute.context.IEolContext;
 import org.eclipse.epsilon.eol.execute.context.Variable;
 import org.eclipse.epsilon.picto.LazyEgxModule.LazyGenerationRuleContentPromise;
 import org.eclipse.epsilon.picto.ViewRenderer.ZoomType;
-import org.eclipse.epsilon.picto.diff.engine.GVComparisonEngine_Cluster;
-import org.eclipse.epsilon.picto.diff.engine.GVComparisonEngine_Cluster.DISPLAY_MODE;
-import org.eclipse.epsilon.picto.diff.engine.GVContext;
+import org.eclipse.epsilon.picto.diff.engine.PictoDiffEngine;
+import org.eclipse.epsilon.picto.diff.engine.PictoDiffEngine.DISPLAY_MODE;
+import org.eclipse.epsilon.picto.diff.engine.PictoDiffContext;
 import org.eclipse.epsilon.picto.source.DotSource;
 import org.eclipse.epsilon.picto.source.EditingDomainProviderSource;
 import org.eclipse.epsilon.picto.source.EmfaticSource;
@@ -403,54 +402,56 @@ public class PictoView extends ViewPart {
 						IPath path = ((FileEditorInput)input).getPath();
 						System.out.println(path.removeLastSegments(1));
 						System.out.println(path.removeLastSegments(1).append(params[0]).toOSString());
-						GVContext gvContext = new GVContext(path.removeLastSegments(1).append(params[0]).toOSString(), path.removeLastSegments(1).append(params[1]).toOSString());
-					    GVComparisonEngine_Cluster comparisonEngine = new GVComparisonEngine_Cluster(gvContext, DISPLAY_MODE.CHANGED);
-					    comparisonEngine.load();
-					    comparisonEngine.compare();
+						PictoDiffContext pictoDiffContext = new PictoDiffContext(path.removeLastSegments(1).append(params[0]).toOSString(), path.removeLastSegments(1).append(params[1]).toOSString());
+					    PictoDiffEngine pictoDiffEngine = new PictoDiffEngine(pictoDiffContext, DISPLAY_MODE.CHANGED);
+					    pictoDiffEngine.load();
+					    pictoDiffEngine.compare();
 					    
-					    String c = comparisonEngine.getSVGString();
+					    String c = pictoDiffEngine.getSVGString();
 					    
 						ViewTree viewTree = new ViewTree();
 						
+						String graph_format = "html";
+						String graph_icon = "diagram-ff0000";
 						ArrayList<String> p = new ArrayList<String>();
 						p.add("Model");
 						p.add("(Diff Graph)");
-						viewTree.addPath(p, new StringContentPromise(c), "html", "diagram-ff0000");
+						viewTree.addPath(p, new StringContentPromise(c), graph_format, graph_icon);
 
 						p.remove(1);
 						p.add("(Left Graph)");
 						
-						StringContentPromise promise = new StringContentPromise(gvContext.getSourceGraphPromise());
-						viewTree.addPath(p, promise, "html", "diagram-ff0000");
+						StringContentPromise promise = new StringContentPromise(pictoDiffContext.getSourceGraphPromise());
+						viewTree.addPath(p, promise, graph_format, graph_icon);
 						
 						p.remove(1);
 						p.add("(Right Graph)");
 						
-						promise = new StringContentPromise(gvContext.getTargetGraphPromise());
-						viewTree.addPath(p, promise, "html", "diagram-ff0000");
+						promise = new StringContentPromise(pictoDiffContext.getTargetGraphPromise());
+						viewTree.addPath(p, promise, graph_format, graph_icon);
 						
 						p.remove(1);
 						p.add("Left Nodes");
 						
-						HashMap<String, String> source_map = gvContext.getSourcePromiseMap();
+						String element_format = "graphviz-dot";
+						String element_icon = "diagram-00ff00";
+						HashMap<String, String> source_map = pictoDiffContext.getSourcePromiseMap();
 						for(String key: source_map.keySet()) {
 							p.add(key);
-							viewTree.addPath(p, new StringContentPromise(source_map.get(key)), "graphviz-dot", "diagram-00ff00");
+							viewTree.addPath(p, new StringContentPromise(source_map.get(key)), element_format, element_icon);
 							p.remove(p.size()-1);
 						}
 						
 						p.remove(p.size()-1);
 						p.add("Right Nodes");
 						
-						HashMap<String, String> target_map = gvContext.getTargetPromiseMap();
+						HashMap<String, String> target_map = pictoDiffContext.getTargetPromiseMap();
 						for(String key: target_map.keySet()) {
 							p.add(key);
-							viewTree.addPath(p, new StringContentPromise(source_map.get(key)), "graphviz-dot", "diagram-00ff00");
+							viewTree.addPath(p, new StringContentPromise(source_map.get(key)), element_format, element_icon);
 							p.remove(p.size()-1);
 						}
 						
-						
-					    
 						runInUIThread(new RunnableWithException() {
 							
 							@Override

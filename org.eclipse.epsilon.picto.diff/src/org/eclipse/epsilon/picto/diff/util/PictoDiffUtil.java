@@ -14,7 +14,7 @@ import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
 import guru.nidi.graphviz.parse.Parser;
 
-public class GraphUtil {
+public class PictoDiffUtil {
 
 	public static void removeNode(MutableGraph graph, MutableNode node) {
 		graph.rootNodes().remove(node);
@@ -179,17 +179,17 @@ public class GraphUtil {
 		InputStream dot1 = new FileInputStream("files/foo_.dot");
 	    MutableGraph g = new Parser().read(dot1);
 	    
-	    MutableNode node = GraphUtil.getNodeRec(g, "n2");
-	    MutableNode node3 = GraphUtil.getNodeRec(g, "n3");
-	    MutableNode node4 = GraphUtil.getNodeRec(g, "n4");
-	    GraphUtil.paintRed(node.links().get(0));
-	    GraphUtil.paintRed(node);
-	    GraphUtil.paintLabelRed(node);
-	    GraphUtil.paintOrange(node3);
-	    GraphUtil.paintGreen(node4);
+	    MutableNode node = PictoDiffUtil.getNodeRec(g, "n2");
+	    MutableNode node3 = PictoDiffUtil.getNodeRec(g, "n3");
+	    MutableNode node4 = PictoDiffUtil.getNodeRec(g, "n4");
+	    PictoDiffUtil.paintRed(node.links().get(0));
+	    PictoDiffUtil.paintRed(node);
+	    PictoDiffUtil.paintLabelRed(node);
+	    PictoDiffUtil.paintOrange(node3);
+	    PictoDiffUtil.paintGreen(node4);
 	    
-	    GraphUtil.linkCrossCluster(g, "n1",	"_n1");
-	    GraphUtil.linkCrossCluster(g, "n2",	"_n2");
+	    PictoDiffUtil.linkCrossCluster(g, "n1",	"_n1");
+	    PictoDiffUtil.linkCrossCluster(g, "n2",	"_n2");
 	    //n.addLink(n2);
 //	    Link l = n.linkTo(n2);
 //	    System.out.println(l);

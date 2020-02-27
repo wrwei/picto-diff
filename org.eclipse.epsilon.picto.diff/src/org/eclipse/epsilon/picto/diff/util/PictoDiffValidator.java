@@ -11,13 +11,13 @@ import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
 import guru.nidi.graphviz.parse.Parser;
 
-public class GraphValidator {
+public class PictoDiffValidator {
 
 	private Set<String> graphLabels = new HashSet<String>();
 	private Set<String> nodeLabels = new HashSet<String>();
 	private Set<String> linkLabels = new HashSet<String>();
 
-	public GraphValidator() {
+	public PictoDiffValidator() {
 	}
 	
 	public boolean validate(MutableGraph graph) {
@@ -70,7 +70,7 @@ public class GraphValidator {
 		InputStream dot1 = new FileInputStream("files/foo_.dot");
 	    MutableGraph g1 = new Parser().read(dot1);
 	    
-	    GraphValidator validator = new GraphValidator();
+	    PictoDiffValidator validator = new PictoDiffValidator();
 	    System.out.println(validator.validate(g1));
 //	    System.out.println(validator.insights());
 
