@@ -1,3 +1,2 @@
 left = files/simple_filesystem.dot;
 right = files/simple_filesystem2.dot;
-transformation = files/addScriptToSVG.eol;

@@ -637,7 +637,11 @@ public class PictoDiffEngine {
 	}
 	
 	public String getSVGString() {
-		 return Graphviz.fromGraph(result).width(700).render(Format.SVG).toString();
+		 return Graphviz.fromGraph(result).render(Format.SVG).toString();
+	}
+	
+	public void saveSVGFile(File file) throws IOException {
+	    Graphviz.fromGraph(result).render(Format.SVG).toFile(file);
 	}
 	
 	private Link linkCrossCluster(MutableGraph graph, String from, String to) {

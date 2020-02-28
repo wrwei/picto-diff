@@ -22,7 +22,8 @@ Require-Bundle: org.eclipse.epsilon.flexmi,
  org.eclipse.ui.forms,
  org.eclipse.emf.ecore.editor,
  org.eclipse.jface.text,
- org.eclipse.epsilon.picto.diff;bundle-version="0.1.0"
+ org.eclipse.epsilon.picto.diff;bundle-version="0.1.0",
+ org.eclipse.epsilon.emc.plainxml;bundle-version="1.6.0"
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy

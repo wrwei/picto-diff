@@ -29,19 +29,24 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.epsilon.common.dt.console.EpsilonConsole;
 import org.eclipse.epsilon.common.dt.util.LogUtil;
 import org.eclipse.epsilon.common.util.OperatingSystem;
+import org.eclipse.epsilon.common.util.StringProperties;
 import org.eclipse.epsilon.egl.EglFileGeneratingTemplateFactory;
 import org.eclipse.epsilon.egl.EglTemplateFactory;
 import org.eclipse.epsilon.egl.EglTemplateFactoryModuleAdapter;
 import org.eclipse.epsilon.egl.IEgxModule;
+import org.eclipse.epsilon.egl.parse.Egx_EolParserRules.newExpression_return;
 import org.eclipse.epsilon.emc.emf.InMemoryEmfModel;
+import org.eclipse.epsilon.emc.plainxml.PlainXmlModel;
+import org.eclipse.epsilon.eol.EolModule;
 import org.eclipse.epsilon.eol.IEolModule;
 import org.eclipse.epsilon.eol.execute.context.IEolContext;
 import org.eclipse.epsilon.eol.execute.context.Variable;
+import org.eclipse.epsilon.eol.models.IModel;
 import org.eclipse.epsilon.picto.LazyEgxModule.LazyGenerationRuleContentPromise;
 import org.eclipse.epsilon.picto.ViewRenderer.ZoomType;
+import org.eclipse.epsilon.picto.diff.engine.PictoDiffContext;
 import org.eclipse.epsilon.picto.diff.engine.PictoDiffEngine;
 import org.eclipse.epsilon.picto.diff.engine.PictoDiffEngine.DISPLAY_MODE;
-import org.eclipse.epsilon.picto.diff.engine.PictoDiffContext;
 import org.eclipse.epsilon.picto.source.DotSource;
 import org.eclipse.epsilon.picto.source.EditingDomainProviderSource;
 import org.eclipse.epsilon.picto.source.EmfaticSource;
@@ -380,13 +385,13 @@ public class PictoView extends ViewPart {
 					String arr[] = content.split("\n");
 					
 					boolean valid = true;
-					if (arr.length != 3) {
+					if (arr.length < 2) {
 						valid = false;
 					}
-					String correct[] = {"left", "right", "transformation"};
+					String correct[] = {"left", "right"};
 					String params[] = new String[3];
 					
-					for(int i = 0; i<3; i++) {
+					for(int i = 0; i<2; i++) {
 						String param[] = arr[i].split("=");
 						if (param[0].trim().equals(correct[i])) {
 							params[i] = param[1].trim();
@@ -407,8 +412,32 @@ public class PictoView extends ViewPart {
 					    pictoDiffEngine.load();
 					    pictoDiffEngine.compare();
 					    
-					    String c = pictoDiffEngine.getSVGString();
+					    File temp = Files.createTempFile(tempDir.toPath(), "temp-svg", ".dot").toFile();
+					    pictoDiffEngine.saveSVGFile(temp);
 					    
+					    PlainXmlModel xml_model = new PlainXmlModel();
+						StringProperties targetProperties = new StringProperties();
+						targetProperties.put(PlainXmlModel.PROPERTY_FILE, temp.getAbsolutePath());
+						targetProperties.put(PlainXmlModel.PROPERTY_NAME, "M");
+						targetProperties.put(PlainXmlModel.PROPERTY_READONLOAD, "true");
+						targetProperties.put(PlainXmlModel.PROPERTY_STOREONDISPOSAL, "true");
+						xml_model.load(targetProperties);
+
+
+						ArrayList<IModel> allTheModels = new ArrayList<IModel>();
+						allTheModels.add(xml_model);
+						
+						EolModule eolModule = new EolModule();
+						for (IModel theModel : allTheModels) {
+							eolModule.getContext().getModelRepository().addModel(theModel);
+						}
+						java.net.URI etlFile = Activator.getDefault().getBundle()
+								.getResource("transformations/addScriptToSVG.eol").toURI();
+						eolModule.parse(etlFile);
+						eolModule.execute();
+						eolModule.getContext().getModelRepository().dispose();
+					    
+						String c = new String(Files.readAllBytes(Paths.get(temp.toURI())));
 						ViewTree viewTree = new ViewTree();
 						
 						String graph_format = "html";
