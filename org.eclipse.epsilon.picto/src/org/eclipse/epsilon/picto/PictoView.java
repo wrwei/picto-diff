@@ -109,7 +109,8 @@ public class PictoView extends ViewPart {
 					new SvgSource(),
 					new DotSource(),
 					new NeatoSource(),
-					new PictoDiffSource());
+					new PictoDiffSource()
+					);
 	
 	@Override
 	public void createPartControl(Composite parent) {
@@ -431,9 +432,9 @@ public class PictoView extends ViewPart {
 						for (IModel theModel : allTheModels) {
 							eolModule.getContext().getModelRepository().addModel(theModel);
 						}
-						java.net.URI etlFile = Activator.getDefault().getBundle()
+						java.net.URI eolFile = Activator.getDefault().getBundle()
 								.getResource("transformations/addScriptToSVG.eol").toURI();
-						eolModule.parse(etlFile);
+						eolModule.parse(eolFile);
 						eolModule.execute();
 						eolModule.getContext().getModelRepository().dispose();
 					    

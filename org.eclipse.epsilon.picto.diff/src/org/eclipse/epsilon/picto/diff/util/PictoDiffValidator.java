@@ -72,7 +72,7 @@ public class PictoDiffValidator {
 	    
 	    PictoDiffValidator validator = new PictoDiffValidator();
 	    System.out.println(validator.validate(g1));
-//	    System.out.println(validator.insights());
+	    System.out.println(validator.insights());
 
 	}
 }
